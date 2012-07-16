@@ -1,5 +1,5 @@
 (function($){
-	$.fn.cajaRegistradora = function (targetValue, opts) {
+	$.fn.cashRegister = function (targetValue, opts) {
 		targetValue = parseFloat(targetValue);
 		var defaultOptions = {
 			easing: 'linear',
