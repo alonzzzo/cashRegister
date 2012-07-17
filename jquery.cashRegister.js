@@ -1,24 +1,28 @@
 (function($){
-	$.fn.cashRegister = function (targetValue, opts) {
-		targetValue = parseFloat(targetValue);
+	$.fn.cashRegister = function (finalValue, opts) {	
+		function getDecimalPrecisionOf(number){
+			return number.toString().indexOf('.') != -1 ? number.toString().split('.')[1].length : 0;
+		}
+		if (isNaN(finalValue))
+			return this;	
+		finalValue = parseFloat(finalValue);
 		var defaultOptions = {
 			easing: 'linear',
 			duration: 700, 
-			precision: 'target'
+			precision: 'finalValue'
 		};
+		var finalValuePrecision = getDecimalPrecisionOf(finalValue);
 		var options = $.extend(defaultOptions, opts);
-		var precision = targetValue.toString().indexOf('.') != -1 ? targetValue.toString().split('.')[1].length : 0;
 		return this.each(function(){
-			if(!isNaN(targetValue)) {
-				this.money = parseFloat($(this).text());
-				$(this).animate({money: targetValue, 'font-size': '1em'},{
-					duration: options.duration,
-					easing: options.easing,
-					step: function(){
-					    $(this).text( parseFloat(this.money).toFixed(precision));
-					}
-				})
-			}
+			this.money = parseFloat($(this).text());
+			this.precision = options.precision == "elementValue" ? getDecimalPrecisionOf(this.money) : finalValuePrecision;
+			$(this).animate({money: finalValue},{
+				duration: options.duration,
+				easing: options.easing,
+				step: function(){
+				    $(this).text( parseFloat(this.money).toFixed(this.precision));
+				}
+			})
 		});
 	}
 })(jQuery);
